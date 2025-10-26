@@ -22,43 +22,6 @@ A modern, responsive developer dashboard built with Next.js that displays your G
 - **GitHub API** - Fetch user profile data
 - **OpenWeatherMap API** - Fetch weather data
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ installed
-- npm or yarn package manager
-
-### Installation
-
-1. Clone the repository:
-\`\`\`bash
-git clone <your-repo-url>
-cd developer-dashboard
-\`\`\`
-
-2. Install dependencies:
-\`\`\`bash
-npm install
-# or
-yarn install
-\`\`\`
-
-3. Set up environment variables (optional):
-
-Create a `.env.local` file in the root directory:
-
-\`\`\`env
-# Optional: Add OpenWeatherMap API key for higher rate limits
-NEXT_PUBLIC_WEATHER_API_KEY=your_api_key_here
-\`\`\`
-
-4. Run the development server:
-\`\`\`bash
-npm run dev
-# or
-yarn dev
-\`\`\`
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
