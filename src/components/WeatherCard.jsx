@@ -20,7 +20,7 @@ export default function WeatherCard({ city = DEFAULT_CITY }) {
     setLoading(true);
     setError(null);
 
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${OPENWEATHER_API}`)
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${data?.lat}&longitude=${data?.lon}&hourly=temperature_2m`)
       .then((res) => {
         if (!res.ok) throw new Error(`Weather API: ${res.status}`);
         return res.json();
