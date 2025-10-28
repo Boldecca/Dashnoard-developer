@@ -40,15 +40,16 @@ export default function GitHubCard({ isDarkMode }) {
     );
   }
 
-  if (error) {
-    return (
-      <div
-        className={`rounded-xl shadow-lg p-8 ${
-          isDarkMode ? 'bg-gray-800' : 'bg-gray-300'
-        } transition-colors duration-300`}
-      >
-        <div className="flex items-center justify-center h-64">
-          <p className="text-red-500 text-lg">{error}</p>
+  if (loading) return <div className="p-6"><LoadingSpinner /></div>;
+  if (error) return <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-xl text-red-700 dark:text-red-300">{error}</div>;
+
+  return (
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md border dark:border-gray-700">
+      <div className="flex items-center gap-4">
+        <img src={data.avatar_url} alt={data.login} className="w-20 h-20 rounded-full object-cover" />
+        <div>
+          <div className="font-semibold text-lg dark:text-white">{data.name || data.login}</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">@{data.login}</div>
         </div>
       </div>
     );
