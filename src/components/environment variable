@@ -1,0 +1,3 @@
+VITE_WEATHER_API_KEY=your_openweather_api_key
+VITE_WEATHER_CITY=Kigali
+VITE_GITHUB_USERNAME=Boldecca
