@@ -23,7 +23,8 @@ A modern, responsive developer dashboard built with Next.js that displays your G
 - **OpenWeatherMap API** - Fetch weather data
 
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## API Information
 
@@ -41,23 +42,6 @@ A modern, responsive developer dashboard built with Next.js that displays your G
 - **Sign up**: [OpenWeatherMap](https://openweathermap.org/api)
 - **Customization**: Change the city in `components/weather-card.tsx`
 
-## Project Structure
-
-\`\`\`
-developer-dashboard/
-├── app/
-│   ├── layout.tsx          # Root layout with theme provider
-│   ├── page.tsx            # Main dashboard page
-│   └── globals.css         # Global styles and theme tokens
-├── components/
-│   ├── github-card.tsx     # GitHub profile statistics card
-│   ├── weather-card.tsx    # Current weather card
-│   └── theme-toggle.tsx    # Light/Dark mode toggle button
-├── components/ui/          # shadcn/ui components
-│   ├── card.tsx
-│   └── button.tsx
-└── README.md
-\`\`\`
 
 ## Customization
 

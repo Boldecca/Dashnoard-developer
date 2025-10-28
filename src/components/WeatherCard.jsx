@@ -1,66 +1,81 @@
-import React, { useEffect, useState } from "react";
-import LoadingSpinner from "./LoadingSpinner";
+import React, { useEffect, useState } from 'react';
 
-const OPENWEATHER_API = import.meta.env.VITE_WEATHER_API_KEY; // must be set
-const DEFAULT_CITY = import.meta.env.VITE_WEATHER_CITY || "Kigali";
-
-export default function WeatherCard({ city = DEFAULT_CITY }) {
+export default function WeatherCard({ isDarkMode }) {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(Boolean(OPENWEATHER_API));
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [time, setTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
 
+  // Update clock every second
   useEffect(() => {
-    let cancel = false;
-    if (!OPENWEATHER_API) {
-      setError("No weather API key configured (VITE_WEATHER_API_KEY).");
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError(null);
-
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${data?.lat}&longitude=${data?.lon}&hourly=temperature_2m`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Weather API: ${res.status}`);
-        return res.json();
-      })
-      .then((json) => { if (!cancel) setData(json); })
-      .catch((err) => { if (!cancel) setError(err.message); })
-      .finally(() => { if (!cancel) setLoading(false); });
-
-    return () => (cancel = true);
-  }, [city]);
-
-  useEffect(() => {
-    const id = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(id);
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
 
-  if (loading) return <div className="p-6"><LoadingSpinner /></div>;
-  if (error) return <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-xl text-red-700 dark:text-red-300">{error}</div>;
-  if (!data) return null;
+  useEffect(() => {
+    const fetchWeatherData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(
+          'https://api.open-meteo.com/v1/forecast?latitude=-1.9536&longitude=30.0606&current_weather=true'
+        );
+        if (!response.ok) throw new Error('Failed to fetch weather data');
+        const result = await response.json();
+        const current = result.current_weather;
+        setData({
+          temperature: Math.round(current.temperature),
+          windSpeed: Math.round(current.windspeed),
+          condition: current.weathercode, // you can map codes to text/icons
+          location: 'Kigali, Rwanda',
+        });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWeatherData();
+    const interval = setInterval(fetchWeatherData, 300000); // every 5 min
+    return () => clearInterval(interval);
+  }, []);
 
-  const temp = Math.round(data.main.temp);
-  const condition = data.weather?.[0]?.description || "";
-  const wind = data.wind?.speed;
+  const formatTime = (date) =>
+    date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
 
-  return (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md border dark:border-gray-700">
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="text-gray-600 dark:text-gray-300 text-sm">{data.name}, {data.sys?.country}</div>
-          <div className="text-3xl font-bold dark:text-white">{temp}°C</div>
-          <div className="text-sm text-gray-500 dark:text-gray-400 capitalize">{condition}</div>
-        </div>
-        <div className="text-right">
-          <div className="text-xs text-gray-500 dark:text-gray-400">Wind</div>
-          <div className="font-semibold dark:text-white">{wind} m/s</div>
+  if (loading) {
+    return (
+      <div className={`rounded-xl shadow-lg p-8 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} transition-colors duration-300`}>
+        <div className="flex items-center justify-center h-64">
+          <span className="animate-spin text-blue-500 text-xl">Loading...</span>
         </div>
       </div>
+    );
+  }
 
-      <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">Local time</div>
-      <div className="text-sm dark:text-white font-mono">{time.toLocaleString()}</div>
+  if (error) {
+    return (
+      <div className={`rounded-xl shadow-lg p-8 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} transition-colors duration-300`}>
+        <div className="flex items-center justify-center h-64">
+          <p className="text-red-500 text-lg">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
+  return (
+    <div className={`rounded-xl shadow-lg p-6 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} transition-colors duration-300 hover:shadow-xl`}>
+      <h2 className="text-xl font-bold mb-4 flex items-center gap-2">☁️ Weather</h2>
+
+      <div className="flex flex-col items-center mb-4">
+        <div className="text-5xl mb-2">{data.condition}</div>
+        <div className="text-4xl font-bold">{data.temperature}°C</div>
+        <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{data.location}</p>
+        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Wind: {data.windSpeed} km/h</p>
+        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Time: {formatTime(currentTime)}</p>
+      </div>
     </div>
   );
 }
