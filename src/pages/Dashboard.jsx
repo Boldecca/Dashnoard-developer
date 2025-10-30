@@ -1,5 +1,4 @@
-import React from "react";
-import GitHubCard from "../components/GitHubCard";
+import React, { useState } from "react";
 import WeatherCard from "../components/WeatherCard";
 import GithubCard from "../components/GithubCard";
 
@@ -25,12 +24,11 @@ export default function Dashboard() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <GitHubCard username={username} />
+              <GithubCard username={username} />
               <WeatherCard />
             </div>
           </div>
 
-          {/* Right column: quick controls */}
           <div className="space-y-6">
             <div className="p-4 bg-[#0f1724] rounded-xl border border-gray-700">
               <h3 className="text-lg font-semibold text-white mb-2">GitHub quick search</h3>
@@ -57,9 +55,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Footer note */}
         <div className="text-xs text-gray-500">Data provided by GitHub API and OpenWeatherMap.</div>
       </div>
-    </div>
+    </main>
   );
 }

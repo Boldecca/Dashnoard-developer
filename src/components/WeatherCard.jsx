@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-export default function WeatherCard({ isDarkMode }) {
+export default function WeatherCard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  const city = import.meta.env.VITE_WEATHER_CITY || 'London';
+  const OPENWEATHER_API = import.meta.env.VITE_WEATHER_API_KEY;
 
   useEffect(() => {
     let cancel = false;
@@ -25,15 +28,15 @@ export default function WeatherCard({ isDarkMode }) {
       .catch((err) => { if (!cancel) setError(err.message); })
       .finally(() => { if (!cancel) setLoading(false); });
 
-    return () => (cancel = true);
-  }, [city]);
+    return () => { cancel = true; };
+  }, [city, OPENWEATHER_API]);
 
   useEffect(() => {
-    const id = setInterval(() => setTime(new Date()), 1000);
+    const id = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  if (loading) return <div className="p-6"><LoadingSpinner /></div>;
+  if (loading) return <div className="p-6">Loading...</div>;
   if (error) return <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-xl text-red-700 dark:text-red-300">{error}</div>;
   if (!data) return null;
 
@@ -56,7 +59,7 @@ export default function WeatherCard({ isDarkMode }) {
       </div>
 
       <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">Local time</div>
-      <div className="text-sm dark:text-white font-mono">{time.toLocaleString()}</div>
+      <div className="text-sm dark:text-white font-mono">{currentTime.toLocaleString()}</div>
     </div>
   );
 }

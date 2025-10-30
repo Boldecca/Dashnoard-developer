@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
+import { useTheme } from "./hooks/useTheme";
 
 export default function App() {
   const { isDarkMode, toggleTheme } = useTheme();
