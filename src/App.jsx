@@ -7,9 +7,9 @@ export default function App() {
   const { isDarkMode, toggleTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black transition-colors">
-      <Navbar />
-      <Dashboard />
+    <div className={`min-h-screen transition-colors bg-white dark:bg-black`}>
+      <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+      <Dashboard isDarkMode={isDarkMode} />
     </div>
   );
 }
